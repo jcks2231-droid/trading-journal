@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Discord access · Signal Organizer{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>Getting messages out of Discord</h2>
+  <p>This app does not connect to Discord. It never asks for your Discord password, session cookie, or user token.
+  Automating a personal account ("self-bot") or reading a user token breaks Discord's Terms of Service and can get the account banned.</p>
+  <h3>If you are only a member of the server</h3>
+  <p>Discord gives members no documented way to read a channel's messages programmatically. Your options:</p>
+  <ul>
+    <li><strong>Copy and paste</strong> alerts into the <a href="{{ url_for('import_view') }}">Import</a> page.</li>
+    <li><strong>Ask a server admin</strong> for an export made with their own bot, or ask them to add a bot that writes alerts to a file you can import.</li>
+    <li><strong>Follow an Announcement channel.</strong> If the alert channel is an Announcement channel, Discord lets you follow it into a server you own.
+      A bot you add to your own server could then read those copies. This app does not include that bot yet.</li>
+  </ul>
+  <h3>If you own or admin the server</h3>
+  <p>A Discord bot with the Message Content intent, added with the permissions you choose, is the documented route.
+  This app does not include one. Adding it would be an external account connection, so it is not built without your approval.</p>
+  <h3>Discord's "Request my data" package</h3>
+  <p>That export contains messages you sent, not other people's alerts, so it rarely helps here.</p>
+</section>
+{% endblock %}

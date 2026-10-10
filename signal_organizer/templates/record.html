@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% from "_macros.html" import record_card %}
+{% block title %}Record #{{ r.id }} · Signal Organizer{% endblock %}
+{% block content %}
+<p><a href="{{ url_for('dashboard') }}">← All alerts</a></p>
+{{ record_card(r, link=false) }}
+
+<section class="card">
+  <h3>Add to paper journal</h3>
+  <p class="meta">Records a hypothetical decision for your own review. Nothing is sent to a broker.</p>
+  <form method="post" action="{{ url_for('journal_add') }}">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <input type="hidden" name="record_id" value="{{ r.id }}">
+    <div class="grid2">
+      <label>Ticker <input name="ticker" value="{{ r.ticker if r.ticker != 'UNKNOWN' else '' }}" required maxlength="6"></label>
+      <label>Type
+        <select name="option_type">
+          {% for t in ['CALL', 'PUT', 'UNKNOWN'] %}<option {% if r.option_type == t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+        </select>
+      </label>
+      <label>Strike <input name="strike" value="{{ r.strike if r.strike != 'UNKNOWN' else '' }}" maxlength="20"></label>
+      <label>Expiration <input name="expiration" value="{{ r.expiration_date if r.expiration_date != 'UNKNOWN' else '' }}" maxlength="20"></label>
+      <label>Decision
+        <select name="decision">{% for d in decisions %}<option>{{ d }}</option>{% endfor %}</select>
+      </label>
+      <label>Hypothetical entry <input name="hypothetical_entry" inputmode="decimal" value="{{ r.entry if r.entry != 'UNKNOWN' else '' }}"></label>
+      <label>Contracts <input name="contracts" inputmode="numeric" value="1"></label>
+    </div>
+    <label class="meta block mt">Notes<textarea name="notes" rows="2" maxlength="2000"></textarea></label>
+    <button type="submit">Save paper entry</button>
+  </form>
+</section>
+
+<section class="card">
+  <a href="{{ url_for('delete_record', record_id=r.id) }}">Delete this record…</a>
+</section>
+{% endblock %}

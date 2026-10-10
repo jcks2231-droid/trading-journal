@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Import · Signal Organizer{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>Paste messages</h2>
+  <p class="meta">Copy alert text from Discord and paste it here. Separate messages with a line containing only <code>---</code>.
+  Optionally start a message with its time in brackets, e.g. <code>[2026-10-09 09:31] BTO $ACME 50C 10/16 @ 1.20</code>.
+  Without a time, the message timestamp is stored as UNKNOWN. Quote lines with <code>&gt; </code> to mark quoted text.</p>
+  <form method="post" action="{{ url_for('import_paste') }}">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <label class="meta">Source label (e.g. server/channel name)
+      <input name="source" maxlength="200" placeholder="manual paste"></label>
+    <textarea name="text" rows="12" required maxlength="2000000" placeholder="[2026-10-09 09:31] BTO $ACME 50C 10/16 @ 1.20 PT 1.80 SL 0.90
+---
+[2026-10-09 10:02] STC $ACME 50C 10/16 @ 1.75"></textarea>
+    <p><button type="submit">Import pasted messages</button></p>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Import a file</h2>
+  <p class="meta">JSON or CSV, up to 5 MB and 5,000 messages. Only import exports you are authorized to have
+  (for example, a server admin's bot export). See <a href="{{ url_for('discord_access') }}">Discord access</a>.</p>
+  <form method="post" action="{{ url_for('import_file') }}" enctype="multipart/form-data">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <input type="file" name="file" accept=".json,.csv,application/json,text/csv" required>
+    <button type="submit">Import file</button>
+  </form>
+  <details class="mt">
+    <summary>Accepted formats</summary>
+    <p><strong>JSON:</strong> a list of objects, or <code>{"messages": [...]}</code>. Each object needs
+    <code>content</code> (or <code>text</code>/<code>message</code>). Optional: <code>timestamp</code>, <code>id</code>,
+    <code>author</code> (string or object with <code>name</code>), <code>channel</code>, and <code>reference</code>/<code>reply_to</code> to mark replies.</p>
+    <p><strong>CSV:</strong> a header row with a <code>content</code> column, plus any of
+    <code>timestamp</code>, <code>id</code>, <code>author</code>, <code>channel</code>, <code>reply_to</code>.</p>
+    <p>Examples with fictional data are in the <code>examples/</code> folder.</p>
+  </details>
+</section>
+{% endblock %}

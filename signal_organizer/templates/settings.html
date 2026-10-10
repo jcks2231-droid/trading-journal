@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Settings · Signal Organizer{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>Settings</h2>
+  <form method="post">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <p><label><input type="checkbox" name="notifications_enabled" {% if notifications_enabled %}checked{% endif %}>
+      Desktop notification when new records are imported</label><br>
+      <span class="meta">Shows the ticker and a short parsed summary. No account details, author names, or message text.
+      {% if not notifications_available %}<strong>Not available on this system</strong> (needs notify-send on Linux, osascript on macOS, or PowerShell on Windows).{% endif %}</span></p>
+    <p><label>Flag a message as stale when older than
+      <input name="stale_minutes" value="{{ stale_minutes }}" size="5" inputmode="numeric"> minutes at import</label></p>
+    <button type="submit">Save</button>
+  </form>
+  <form method="post" action="{{ url_for('test_notification') }}" class="mt">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <button type="submit" class="plain">Send a test notification</button>
+  </form>
+</section>
+<section class="card">
+  <h3>Data</h3>
+  <p class="meta">{{ record_count }} record(s) stored locally in <code>{{ db_path }}</code>. No external accounts are connected.</p>
+  <a href="{{ url_for('delete_all') }}">Delete all records…</a>
+</section>
+{% endblock %}

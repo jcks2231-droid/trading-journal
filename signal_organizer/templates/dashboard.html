@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% from "_macros.html" import record_card %}
+{% block title %}Alerts · Signal Organizer{% endblock %}
+{% block content %}
+<form class="filters card" method="get">
+  <label>Ticker
+    <select name="ticker">
+      <option value="">All</option>
+      {% for t in tickers %}<option {% if filters.ticker == t %}selected{% endif %}>{{ t }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>From <input type="date" name="from" value="{{ filters.from }}"></label>
+  <label>To <input type="date" name="to" value="{{ filters.to }}"></label>
+  <label>Parse status
+    <select name="status">
+      <option value="">All</option>
+      {% for s in statuses %}<option {% if filters.status == s %}selected{% endif %}>{{ s }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Kind
+    <select name="kind">
+      <option value="">All</option>
+      {% for k in kinds %}<option value="{{ k }}" {% if filters.kind == k %}selected{% endif %}>{{ k | replace('_', ' ') }}</option>{% endfor %}
+    </select>
+  </label>
+  <label>Order
+    <select name="order">
+      <option value="asc" {% if filters.order == 'asc' %}selected{% endif %}>Oldest first</option>
+      <option value="desc" {% if filters.order == 'desc' %}selected{% endif %}>Newest first</option>
+    </select>
+  </label>
+  <button type="submit">Filter</button>
+  <a href="{{ url_for('dashboard') }}">Clear</a>
+</form>
+<p class="meta">{{ records | length }} record(s), sorted by message time (import time when the message time is unknown).</p>
+{% for r in records %}{{ record_card(r) }}{% else %}
+<div class="card">No records match. <a href="{{ url_for('import_view') }}">Import messages</a>.</div>
+{% endfor %}
+{% endblock %}

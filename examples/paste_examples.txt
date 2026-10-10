@@ -1,0 +1,8 @@
+[2026-10-09 09:31] BTO $ACME 50C 10/16 @ 1.20 PT 1.80/2.40 SL 0.90
+---
+[2026-10-09 09:48] FAKE 120 puts exp Oct 23 entry .85 target 1.60 stop .50
+---
+> BTO $ACME 50C 10/16 @ 1.20
+still holding this one
+---
+DEMO 33c 0DTE lotto @ .15

@@ -1,0 +1,23 @@
+{
+  "channel": {"name": "#example-alerts (fictional)"},
+  "messages": [
+    {"id": "demo-1", "timestamp": "2026-10-08T13:31:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "BTO $ACME 50C 10/16 @ 1.20\nPT 1.80 / 2.40\nSL 0.90"},
+    {"id": "demo-2", "timestamp": "2026-10-08T13:45:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "FAKE 120 puts exp Oct 23 entry .85 target 1.60 stop .50"},
+    {"id": "demo-3", "timestamp": "2026-10-08T14:02:00Z", "author": {"name": "MemberOne"},
+     "content": "> BTO $ACME 50C 10/16 @ 1.20\nis this still good?", "reference": {"message_id": "demo-1"}},
+    {"id": "demo-4", "timestamp": "2026-10-08T15:10:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "Trimmed half $ACME 50C 10/16 @ 1.75"},
+    {"id": "demo-5", "timestamp": "2026-10-08T15:30:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "DEMO 33c 0DTE lotto @ .15"},
+    {"id": "demo-6", "timestamp": "2026-10-08T15:31:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "DEMO 33c 0DTE lotto @ .15"},
+    {"id": "demo-7", "timestamp": "2026-10-09T13:35:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "Watching ZZZT or XMPL 80C 11/20, entry TBD"},
+    {"id": "demo-8", "timestamp": "2026-10-09T14:00:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "Good morning all, market opens in 30 min. Plan your trades."},
+    {"id": "demo-9", "timestamp": "2026-09-15T14:00:00Z", "author": {"name": "ExampleAlerts"},
+     "content": "BTO $XMPL 75P 9/26/2026 @ 2.05 PT 3.00 SL 1.50"}
+  ]
+}

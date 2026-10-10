@@ -1,0 +1,6 @@
+id,timestamp,author,channel,content,reply_to
+csv-1,2026-10-09 09:31,ExampleAlerts,#example-alerts (fictional),"BTO $ACME 55C 10/23 @ 0.95 PT 1.50 SL 0.60",
+csv-2,2026-10-09 09:40,ExampleAlerts,#example-alerts (fictional),"FAKE 118P 10/30 @ 1.10",
+csv-3,2026-10-09 10:15,MemberTwo,#example-alerts (fictional),"> BTO $ACME 55C 10/23 @ 0.95
+in too",csv-1
+csv-4,2026-10-09 11:00,ExampleAlerts,#example-alerts (fictional),"STC $ACME 55C 10/23 @ 1.40",

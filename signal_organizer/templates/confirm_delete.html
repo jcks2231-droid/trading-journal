@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Confirm delete · Signal Organizer{% endblock %}
+{% block content %}
+<section class="card">
+  <h2>Delete {{ what }}?</h2>
+  <p>This cannot be undone.</p>
+  {% if preview %}<pre class="original">{{ preview }}</pre>{% endif %}
+  <form method="post" action="{{ action }}">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <input type="hidden" name="confirm" value="yes">
+    {% if require_typed %}
+      <p><label>Type <code>DELETE</code> to confirm: <input name="typed" autocomplete="off" required></label></p>
+    {% endif %}
+    <button type="submit" class="danger">Yes, delete</button>
+    <a href="{{ cancel }}">Cancel</a>
+  </form>
+</section>
+{% endblock %}

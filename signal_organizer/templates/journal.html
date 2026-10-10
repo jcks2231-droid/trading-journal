@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Paper journal · Signal Organizer{% endblock %}
+{% block content %}
+<h2>Paper-trading journal</h2>
+<p class="meta">Hypothetical decisions only. This journal is not connected to any broker and cannot place orders.
+P/L assumes 100 shares per contract and ignores fees, slippage, and fills.</p>
+
+{% if total_pnl is not none %}
+<p class="card">Hypothetical P/L across {{ closed_count }} closed paper entr{{ 'y' if closed_count == 1 else 'ies' }}:
+  <strong class="{{ 'pos' if total_pnl >= 0 else 'neg' }}">{{ '%+.2f' | format(total_pnl) }}</strong></p>
+{% endif %}
+
+<section class="card">
+  <h3>New paper entry</h3>
+  <form method="post" action="{{ url_for('journal_add') }}">
+    <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+    <div class="grid2">
+      <label>Ticker <input name="ticker" required maxlength="6"></label>
+      <label>Type <select name="option_type"><option>CALL</option><option>PUT</option><option>UNKNOWN</option></select></label>
+      <label>Strike <input name="strike" maxlength="20"></label>
+      <label>Expiration <input name="expiration" maxlength="20" placeholder="YYYY-MM-DD"></label>
+      <label>Decision <select name="decision">{% for d in decisions %}<option>{{ d }}</option>{% endfor %}</select></label>
+      <label>Hypothetical entry <input name="hypothetical_entry" inputmode="decimal"></label>
+      <label>Hypothetical exit <input name="hypothetical_exit" inputmode="decimal"></label>
+      <label>Contracts <input name="contracts" inputmode="numeric"></label>
+    </div>
+    <label class="meta block mt">Notes<textarea name="notes" rows="2" maxlength="2000"></textarea></label>
+    <button type="submit">Save paper entry</button>
+  </form>
+</section>
+
+<table class="card">
+  <thead><tr><th>Date</th><th>Contract</th><th>Decision</th><th>Entry</th><th>Exit</th><th>Qty</th><th>Paper P/L</th><th>Notes / record outcome</th><th></th></tr></thead>
+  <tbody>
+  {% for e in entries %}
+    <tr>
+      <td>{{ e.created_at | pretty_ts }}</td>
+      <td>{{ e.ticker }} {{ e.strike }} {{ e.option_type }} {{ e.expiration }}
+        {% if e.record_id %}<br><a href="{{ url_for('record_detail', record_id=e.record_id) }}">record #{{ e.record_id }}</a>{% endif %}</td>
+      <td>{{ e.decision }}</td>
+      <td>{{ e.hypothetical_entry if e.hypothetical_entry is not none else '' }}</td>
+      <td>{{ e.hypothetical_exit if e.hypothetical_exit is not none else '' }}</td>
+      <td>{{ e.contracts if e.contracts is not none else '' }}</td>
+      <td>{% if e.pnl is not none %}<span class="{{ 'pos' if e.pnl >= 0 else 'neg' }}">{{ '%+.2f' | format(e.pnl) }}</span>{% endif %}</td>
+      <td>
+        <form method="post" action="{{ url_for('journal_exit', entry_id=e.id) }}">
+          <input type="hidden" name="csrf" value="{{ csrf_token() }}">
+          <input name="hypothetical_exit" inputmode="decimal" placeholder="exit" size="6"
+                 value="{{ e.hypothetical_exit if e.hypothetical_exit is not none else '' }}">
+          <input name="notes" value="{{ e.notes }}" maxlength="2000" placeholder="outcome notes">
+          <button type="submit" class="plain">Save</button>
+        </form>
+      </td>
+      <td><a href="{{ url_for('journal_delete', entry_id=e.id) }}">Delete…</a></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="9">No paper entries yet.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

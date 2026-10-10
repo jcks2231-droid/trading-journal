@@ -1,0 +1,47 @@
+{% macro val(v) -%}
+{%- if v is none or v == 'UNKNOWN' or v == '' %}<span class="unknown">UNKNOWN</span>{% else %}{{ v }}{% endif -%}
+{%- endmacro %}
+
+{% macro record_card(r, link=true) %}
+<article class="card">
+  <div class="meta">
+    {% if link %}<a href="{{ url_for('record_detail', record_id=r.id) }}">#{{ r.id }}</a>{% else %}#{{ r.id }}{% endif %}
+    · message time: {{ r.message_ts | pretty_ts }}
+    · source: {{ r.source }}{% if r.author %} · author: {{ r.author }}{% endif %}
+    · imported {{ r.imported_at | pretty_ts }}
+  </div>
+  <div>
+    <span class="chip {{ r.parse_status }}">{{ r.parse_status }}</span>
+    <span class="chip">{{ r.kind | replace('_', ' ') }}</span>
+    {% if r.is_stale %}<span class="chip flag" title="{{ r.stale_reason }}">STALE</span>{% endif %}
+    {% if r.duplicate_of %}<span class="chip flag">DUPLICATE of #{{ r.duplicate_of }}</span>{% endif %}
+    <span class="chip">unverified</span>
+  </div>
+  <div class="record mt">
+    <div>
+      <div class="meta">Original message (exact)</div>
+      <pre class="original">{{ r.original_text }}</pre>
+    </div>
+    <div>
+      <div class="meta">Parsed fields</div>
+      <dl class="fields">
+        <dt>Ticker</dt><dd>{{ val(r.ticker) }}</dd>
+        <dt>Call/put</dt><dd>{{ val(r.option_type) }}</dd>
+        <dt>Strike</dt><dd>{{ val(r.strike) }}</dd>
+        <dt>Expiration (stated)</dt><dd>{{ val(r.expiration_text) }}</dd>
+        <dt>Expiration (date)</dt><dd>{{ val(r.expiration_date) }}</dd>
+        <dt>Stated entry</dt><dd>{{ val(r.entry) }}</dd>
+        <dt>Stated target</dt><dd>{{ val(r.target) }}</dd>
+        <dt>Stated stop</dt><dd>{{ val(r.stop) }}</dd>
+        <dt>Message time</dt><dd>{{ r.message_ts | pretty_ts }}</dd>
+      </dl>
+      {% if r.notes or r.stale_reason %}
+      <ul class="notes">
+        {% if r.stale_reason %}<li>Stale: {{ r.stale_reason }}</li>{% endif %}
+        {% for n in r.notes %}<li>{{ n }}</li>{% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+  </div>
+</article>
+{% endmacro %}
